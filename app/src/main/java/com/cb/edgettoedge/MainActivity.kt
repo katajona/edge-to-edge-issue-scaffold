@@ -9,9 +9,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.navigation.ModalBottomSheetLayout
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
@@ -23,13 +26,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.cb.edgettoedge.ui.theme.JetpackComposeEdgeToEdgeSampleTheme
 
@@ -63,20 +71,41 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     },
+                    contentWindowInsets = WindowInsets(0, 0, 0, 0),
                     content = { padding ->
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(color = Color.Green)
                         ) {
-                            val bottomSheetNavigator = rememberBottomSheetNavigator(true)
-                            ModalBottomSheetLayout(
-                                modifier = Modifier
-                                    .padding(padding),
-                                bottomSheetNavigator = bottomSheetNavigator,
+                            androidx.compose.material.ModalBottomSheetLayout(
+                                sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Expanded),
+                                sheetContent = {
+                                    Column(
+                                        Modifier.background(Color.Gray)
+                                    ) {
+                                        var text by remember {
+                                            mutableStateOf(TextFieldValue(""))
+                                        }
+                                        Text(text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting")
+
+                                        TextField(text, onValueChange = {
+                                            text = it
+                                        })
+                                        Spacer(
+                                            modifier = Modifier.windowInsetsBottomHeight(
+                                                WindowInsets.systemBars
+                                            )
+                                        )
+                                        Text(text = "This is not visible when the textfield is focused")
+                                    }
+
+                                },
+                                modifier = Modifier.padding(padding),
                                 sheetBackgroundColor = Color.Transparent
                             ) {
                                 Scaffold(
+                                    contentWindowInsets = WindowInsets(0, 0, 0, 0),
                                     topBar = {
                                         TopAppBar(title = { Text(text = "title") })
                                     },
